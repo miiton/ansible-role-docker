@@ -1,0 +1,18 @@
+---
+galaxy_info:
+  author: miiton
+  description: Docker base
+  company: "miiton"
+  license: "MIT"
+  min_ansible_version: 2.12
+  platforms:
+    - name: Ubuntu
+      versions:
+        - 20.04
+        - 22.04
+  galaxy_tags:
+    - docker
+    - system
+
+dependencies:
+  - git+git@github.com:miiton/ansible-role-ubuntu-base.git

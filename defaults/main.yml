@@ -1,1 +1,2 @@
 docker_users: ["ubuntu"]
+docker_networks: ["private", "proxy"]

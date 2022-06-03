@@ -15,4 +15,6 @@ galaxy_info:
     - system
 
 dependencies:
-  - git+git@github.com:miiton/ansible-role-ubuntu-base.git
+  - name: base
+    src: git+git@github.com:miiton/ansible-role-ubuntu-base.git
+    version: main

@@ -8,8 +8,13 @@ Environment=COMPOSE_FILE=/opt/docker-compose-service/%i/docker-compose.yml
 ExecStartPre=-/usr/local/bin/docker-compose -f ${COMPOSE_FILE} down
 ExecStart=/usr/local/bin/docker-compose -f ${COMPOSE_FILE} up
 ExecStop=/usr/local/bin/docker-compose -f ${COMPOSE_FILE} down
+{% if ansible_facts.distribution_release == "jammy" %}
 StandardOutput=append:/var/log/docker-compose-service/%i.log
 StandardError=append:/var/log/docker-compose-service/%i.log
+{% else %}
+StandardOutput=file:/var/log/docker-compose-service/%i.log
+StandardError=file:/var/log/docker-compose-service/%i.log
+{% endif %}
 
 [Install]
 WantedBy=multi-user.target

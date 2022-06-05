@@ -40,8 +40,8 @@
 
 
 - name: Put compose unit file
-  copy:
-    src: docker-compose-service@.service
+  template:
+    src: docker-compose-service@.service.j2
     dest: /etc/systemd/system/docker-compose-service@.service
     mode: 0755
 

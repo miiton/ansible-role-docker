@@ -1,38 +1,44 @@
 ---
+- name: Create directories
+  file:
+    state: directory
+    path: "{{ item }}"
+    mode: 0755
+  with_items:
+    - /opt/docker-compose-service
+    - /var/log/docker-compose-service
+
 - name: Uninstall docker from distribution
   apt:
     name: ["docker", "docker-engine", "docker.io"]
     state: absent
+
 - name: Add official docker's apt key
   apt_key:
     url: https://download.docker.com/linux/ubuntu/gpg
     state: present
+
 - name: Add official docker's apt-repository
   apt_repository:
     repo: "deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ ansible_facts.distribution_release }} stable"
     state: present
+
 - name: Install packages
   apt:
     name: ["docker-ce"]
     state: present
+
 - name: install python docker module
   pip:
     name: docker
+
 - name: Install docker-compose
   get_url:
     url: https://github.com/docker/compose/releases/latest/download/docker-compose-Linux-x86_64
     dest: /usr/local/bin/docker-compose
     mode: 0755
-- name: Create compose directory
-  file:
-    state: directory
-    path: /etc/docker/compose
-    mode: 0755
-- name: Create compose directory new
-  file:
-    state: directory
-    path: /opt/docker-compose-service/
-    mode: 0755
+
+
 - name: Put compose unit file
   copy:
     src: docker-compose-service@.service

@@ -28,7 +28,7 @@
     name: ["docker-ce"]
     state: present
 
-- name: install python docker module
+- name: Install python docker module
   pip:
     name: docker
 
@@ -38,14 +38,13 @@
     dest: /usr/local/bin/docker-compose
     mode: 0755
 
-
 - name: Put compose unit file
   template:
     src: docker-compose-service@.service.j2
     dest: /etc/systemd/system/docker-compose-service@.service
     mode: 0755
 
-- name: users joins to docker
+- name: Join users to docker group
   user:
     name: "{{item}}"
     create_home: yes
@@ -59,3 +58,23 @@
   docker_network:
     name: "{{item}}"
   with_items: "{{ docker_networks }}"
+    
+- name: Check loki plugin
+  community.docker.docker_plugin:
+    plugin_name: grafana/loki-docker-driver:latest
+    alias: loki
+    state: enable
+  register: loki_plugin
+  ignore_errors: true
+
+- name: Install loki plugin
+  command: docker plugin install grafana/loki-docker-driver:latest --alias loki --grant-all-permissions
+  when: loki_plugin.failed == true
+  notify: Restart docker
+        
+- name: Start docker
+  systemd:
+    name: docker
+    enabled: yes
+    state: started
+    daemon_reload: yes
